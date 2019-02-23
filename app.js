@@ -1,12 +1,14 @@
-require("dotenv").config();
-
 const watson = require("watson-developer-cloud");
+const prompt = require("prompt-sync")();
+require("dotenv").config();
 
 const assistant = new watson.AssistantV1({
   version: process.env.VERSION,
   url: process.env.ASSISTANT_URL,
   iam_apikey: process.env.ASSISTANT_IAM_APIKEY
 });
+
+const workspace_id = process.env.WORKSPACE_ID;
 
 // const assistant = new watson.AssistantV1({
 //   username: process.env.ASSISTANT_USERNAME,
@@ -25,11 +27,16 @@ function callbackResp(err, res) {
   const { text } = output;
   const { length } = text;
 
+  console.log(res);
+
   if (length) {
     console.log(text);
   }
+
+  const msgUser = prompt(">> ");
+  assistant.message({ workspace_id, input: { text: msgUser } }, callbackResp);
 }
 
-const params = { workspace_id: process.env.WORKSPACE_ID };
+const params = { workspace_id };
 
 assistant.message(params, callbackResp);
