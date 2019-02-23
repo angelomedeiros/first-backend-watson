@@ -23,7 +23,7 @@ function callbackResp(err, res) {
     return;
   }
 
-  const { output } = res;
+  const { output, context } = res;
   const { text } = output;
   const { length } = text;
 
@@ -34,7 +34,10 @@ function callbackResp(err, res) {
   }
 
   const msgUser = prompt(">> ");
-  assistant.message({ workspace_id, input: { text: msgUser } }, callbackResp);
+  assistant.message(
+    { workspace_id, input: { text: msgUser }, context },
+    callbackResp
+  );
 }
 
 const params = { workspace_id };
